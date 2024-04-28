@@ -1,0 +1,116 @@
+openapi: 3.0.0
+info:
+  title: Quiz REST API
+  version: '1.0'
+  description: This is a REST API for a quiz application.
+servers:
+  - url: http://localhost:8080
+paths:
+  /quiz/api/v1/questions:
+    get:
+      summary: Get list of questions
+      description: Get a list of all questions.
+      responses:
+        '200':
+          description: A list of questions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Question'
+  /quiz/api/v1/answers:
+    post:
+      summary: Submit answers
+      description: Submit answers to the quiz.
+      parameters:
+        - name: user
+          in: query
+          required: true
+          description: The user ID in whose name to submit answers
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnswerMatrix'
+      responses:
+        '201':
+          description: Answers submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnswerMatrix'
+  /quiz/api/v1/user/{user}/statistics:
+    get:
+      summary: Get user statistics
+      description: Get statistics for a specific user.
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: The user ID for whom to obtain statistics
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Statistic'
+components:
+  schemas:
+    Question:
+      type: object
+      properties:
+        id:
+          description: ID of question, to be used as reference when submitting answers
+          type: integer
+          format: int32
+        query:
+          description: The actual question
+          type: string
+        answers:
+          description: List of potential answers. Only 1 option is correct.
+          type: array
+          items:
+            type: string
+    Answer:
+      type: object
+      properties:
+        questionId:
+          description: ID of question in context
+          type: integer
+          format: int32
+        answerId:
+          description: ID of answer in context
+          type: integer
+          format: int32
+    AnswerMatrix:
+      type: object
+      properties:
+        score:
+          description: The number of correct answers submitted. (Not expected in request)
+          type: integer
+          format: int32
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Answer'
+    Statistic:
+      type: object
+      properties:
+        userScore:
+          type: integer
+          format: int32
+        worseQuizzersRatio:
+          description: Ratio of quizzers scoring less than user in context
+          type: number
+          format: float
+        totalQuizzers:
+          description: Total number of distinct participants
+          type: integer
+          format: int32
