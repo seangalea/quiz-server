@@ -27,7 +27,7 @@ paths:
         - name: user
           in: query
           required: true
-          description: The user ID
+          description: The user ID in whose name to submit answers
           schema:
             type: string
       requestBody:
@@ -51,7 +51,7 @@ paths:
         - name: user
           in: path
           required: true
-          description: The user ID
+          description: The user ID for whom to obtain statistics
           schema:
             type: string
       responses:
@@ -67,30 +67,33 @@ components:
       type: object
       properties:
         id:
+          description: ID of question, to be used as reference when submitting answers
           type: integer
           format: int32
         query:
+          description: The actual question
           type: string
         answers:
+          description: List of potential answers. Only 1 option is correct.
           type: array
           items:
             type: string
-        correctAnswer:
-          type: integer
-          format: int32
     Answer:
       type: object
       properties:
         questionId:
+          description: ID of question in context
           type: integer
           format: int32
         answerId:
+          description: ID of answer in context
           type: integer
           format: int32
     AnswerMatrix:
       type: object
       properties:
         score:
+          description: The number of correct answers submitted. (Not expected in request)
           type: integer
           format: int32
         answers:
@@ -104,8 +107,10 @@ components:
           type: integer
           format: int32
         worseQuizzersRatio:
+          description: Ratio of quizzers scoring less than user in context
           type: number
           format: float
         totalQuizzers:
+          description: Total number of distinct participants
           type: integer
           format: int32
