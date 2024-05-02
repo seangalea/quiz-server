@@ -97,6 +97,7 @@ components:
           type: integer
           format: int32
         answers:
+          description: List of answers corresponding to their questionId. Only the last instance is considered when multiple answers are submitted for the same questionId.
           type: array
           items:
             $ref: '#/components/schemas/Answer'
