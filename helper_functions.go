@@ -2,16 +2,46 @@ package main
 
 import (
 	"log"
+	"sort"
 )
 
-func calculateScore(answerList []Answer) int {
+func initQuestions() {
+	log.Print("Initializing questions")
+
+	// generate question list
+	for key, value := range questionsRepository {
+		value.ID = key
+		questionsList = append(questionsList, value)
+	}
+
+	// Sort questions array by ID
+	sort.Slice(questionsList, func(i, j int) bool {
+		if questionsList[i].ID == questionsList[j].ID {
+			log.Fatalf("Found duplicate question ID: %d", questionsList[i].ID)
+		}
+		return questionsList[i].ID < questionsList[j].ID
+	})
+}
+
+func calculateScore(answers []Answer) int {
 	log.Print("Calculating score")
 
+	wasAnsweredCorrectly := make(map[int]bool)
 	score := 0
-	for i, ans := range answerList {
-		// increment score if answer is correct
-		if i < len(questions) && ans.AnswerID == questions[i].CorrectAnswer {
+	for _, ans := range answers {
+		wasCorrect, wasAnswered := wasAnsweredCorrectly[ans.QuestionID]
+
+		// Revert score if the question has been answered before
+		if wasAnswered && wasCorrect {
+			score--
+		}
+
+		// keep track of answer and increment score only if answer is correct
+		if ans.AnswerID == questionsRepository[ans.QuestionID].CorrectAnswer {
 			score++
+			wasAnsweredCorrectly[ans.QuestionID] = true
+		} else {
+			wasAnsweredCorrectly[ans.QuestionID] = false
 		}
 	}
 

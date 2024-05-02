@@ -10,6 +10,8 @@ import (
 func main() {
 	log.Printf("Starting Quiz REST webservice")
 
+	initQuestions()
+
 	router := gin.Default()
 	v1 := router.Group("/quiz/api/v1")
 
@@ -24,7 +26,7 @@ func main() {
 func getQuestions(c *gin.Context) {
 	log.Print("GET questions")
 
-	c.IndentedJSON(http.StatusOK, questions)
+	c.IndentedJSON(http.StatusOK, questionsList)
 }
 
 func getStatistics(c *gin.Context) {
