@@ -63,7 +63,7 @@ func TestCalculateScore(t *testing.T) {
 			expectedScore: 1,
 		},
 		{
-			name: "Unordered answers",
+			name: "Unordered answers", // unit test which identified issue fixed in branch fix/answer-question-mapping
 			answerList: []Answer{
 				{QuestionID: 2, AnswerID: 3},
 				{QuestionID: 1, AnswerID: 0},
